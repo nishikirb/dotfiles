@@ -30,4 +30,11 @@ setopt share_history
 # auto ls
 function chpwd() { ls }
 
+[ -f $HOMEBREW_PREFIX/opt/asdf/libexec/asdf.sh ] && . $HOMEBREW_PREFIX/opt/asdf/libexec/asdf.sh
+[ -f "${XDG_CONFIG_HOME:-$HOME/.config}"/fzf/fzf.zsh ] && source "${XDG_CONFIG_HOME:-$HOME/.config}"/fzf/fzf.zsh
+
+if command -v starship > /dev/null 2>&1; then
+    eval "$(starship init zsh)"
+fi
+
 autoload -Uz compinit; compinit
