@@ -30,6 +30,21 @@ setopt share_history
 # auto ls
 function chpwd() { ls }
 
+# -------
+# Aliases
+# -------
+alias la='ls -la'
+alias g='git'
+alias t='tmux'
+
+# ------------
+# Key Bindings
+# ------------
+bindkey '^[[A' history-substring-search-up
+bindkey '^[[B' history-substring-search-down
+bindkey -M vicmd 'k' history-substring-search-up
+bindkey -M vicmd 'j' history-substring-search-down
+
 [ -f $HOMEBREW_PREFIX/opt/asdf/libexec/asdf.sh ] && . $HOMEBREW_PREFIX/opt/asdf/libexec/asdf.sh
 [ -f "${XDG_CONFIG_HOME:-$HOME/.config}"/fzf/fzf.zsh ] && source "${XDG_CONFIG_HOME:-$HOME/.config}"/fzf/fzf.zsh
 
