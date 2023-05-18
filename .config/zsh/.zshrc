@@ -51,5 +51,8 @@ bindkey -M vicmd 'j' history-substring-search-down
 if command -v starship > /dev/null 2>&1; then
     eval "$(starship init zsh)"
 fi
+if command -v sheldon > /dev/null 2>&1; then
+    eval "$(sheldon source)"
+fi
 
 autoload -Uz compinit; compinit
