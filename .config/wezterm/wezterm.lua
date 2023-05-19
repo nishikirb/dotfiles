@@ -12,7 +12,7 @@ config.color_scheme = 'nordfox'
 config.font = wezterm.font("HackGen Console NF", { weight = "Regular" })
 config.font_size = 16.0
 config.line_height = 1.1
-config.window_background_opacity = 0.8
+config.window_background_opacity = 0.9
 config.macos_window_background_blur = 20
 config.inactive_pane_hsb = {
     saturation = 0.9,

@@ -390,5 +390,14 @@ require("lazy").setup({
         config = function(_, opts)
             vim.cmd.colorscheme("nordfox")
         end
+    },
+    {
+        "xiyaowong/transparent.nvim",
+        build = ":TransparentEnable",
+        opts = { extra_groups = { "NeotreeNormal", "NeoTreeNormalNc" } },
+        config = function(_, opts)
+            require("transparent").setup(opts)
+            -- vim.g.transparent_groups = vim.list_extend(vim.g.transparent_groups or {}, { "ExtraGroup" })
+        end,
     }
 })
