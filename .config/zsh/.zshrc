@@ -36,6 +36,7 @@ function chpwd() { ls }
 alias la='ls -la'
 alias g='git'
 alias t='tmux'
+alias v='nvim'
 
 # ------------
 # Key Bindings
