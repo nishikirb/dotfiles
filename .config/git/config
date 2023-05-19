@@ -1,0 +1,18 @@
+[user]
+	name = gleamsoda
+	email = gleamsoda99@gmail.com
+
+[core]
+	editor = nvim
+	pager = delta
+
+[alias]
+	a = add
+	cm = commit
+	ps = push
+	pl = pull
+	s = status
+	co = checkout
+	df = diff
+	dfc = diff --cached
+	l = log
