@@ -1,34 +1,34 @@
 local vim_opts = {
     encoding = "utf-8",
     title = false,
-    ruler = true,  -- Show the cursor position
+    ruler = true, -- Show the cursor position
     number = true, -- 行番号の表示
-    list = true,   -- Show invisible characters
+    list = true, -- Show invisible characters
     listchars = {
         tab = "» ",
         trail = "·",
         nbsp = "·",
         eol = "↲",
     },
-    expandtab = true,               -- タブを空白に置き換える
-    tabstop = 2,                    -- タブ幅
-    softtabstop = 2,                -- バックスペースなどで削除する空白の数
-    shiftwidth = 2,                 -- インデント幅
-    autoindent = true,              -- 改行時に入力された行のインデントを継続する
-    smartindent = true,             -- 改行時に入力された行の末尾に合わせて次の行のインデントを増減する
-    whichwrap = "b,s,h,l,<,>,[,]",  -- カーソルを行頭、行末で止まらないようにする
+    expandtab = true,             -- タブを空白に置き換える
+    tabstop = 2,                  -- タブ幅
+    softtabstop = 2,              -- バックスペースなどで削除する空白の数
+    shiftwidth = 2,               -- インデント幅
+    autoindent = true,            -- 改行時に入力された行のインデントを継続する
+    smartindent = true,           -- 改行時に入力された行の末尾に合わせて次の行のインデントを増減する
+    whichwrap = "b,s,h,l,<,>,[,]", -- カーソルを行頭、行末で止まらないようにする
     backspace = "indent,eol,start", -- バックスペースを有効にする
     colorcolumn = "100",
-    synmaxcol = 200,                -- シンタックスハイライトは一行につき200文字までとする
-    backup = false,                 -- ファイル保存時にバックアップファイルを作らない
-    swapfile = false,               -- ファイル編集中にスワップファイルを作らない
-    wildmenu = true,                -- コマンドラインモードで<Tab>キーによるファイル名補完を有効にする
-    history = 100,                  -- keep command line history
-    hlsearch = true,                -- 検索文字列をハイライトする
-    incsearch = true,               -- do incremental searching
-    ignorecase = true,              -- 大文字と小文字を区別しない
-    smartcase = true,               -- 大文字と小文字が混在している場合は大文字と小文字を区別する
-    laststatus = 2,                 -- display status line
+    synmaxcol = 200,              -- シンタックスハイライトは一行につき200文字までとする
+    backup = false,               -- ファイル保存時にバックアップファイルを作らない
+    swapfile = false,             -- ファイル編集中にスワップファイルを作らない
+    wildmenu = true,              -- コマンドラインモードで<Tab>キーによるファイル名補完を有効にする
+    history = 100,                -- keep command line history
+    hlsearch = true,              -- 検索文字列をハイライトする
+    incsearch = true,             -- do incremental searching
+    ignorecase = true,            -- 大文字と小文字を区別しない
+    smartcase = true,             -- 大文字と小文字が混在している場合は大文字と小文字を区別する
+    laststatus = 2,               -- display status line
     clipboard = "unnamed",
     mouse = "a",
     visualbell = true,
@@ -279,6 +279,64 @@ require("lazy").setup({
             vim.api.nvim_set_keymap('n', '<leader>fb', '<cmd>Telescope buffers<cr>', keymap_opts)
             vim.api.nvim_set_keymap('n', '<leader>fh', '<cmd>Telescope help_tags<cr>', keymap_opts)
         end
+    },
+    {
+        "petertriho/nvim-scrollbar",
+        dependencies = {
+            "kevinhwang91/nvim-hlslens",
+            "lewis6991/gitsigns.nvim"
+        },
+        config = function(_, opts)
+            require("scrollbar").setup()
+        end
+    },
+    {
+        "kevinhwang91/nvim-hlslens",
+        opts = {
+            build_position_cb = function(plist, _, _, _)
+                require("scrollbar.handlers.search").handler.show(plist.start_pos)
+            end,
+        },
+        config = function(_, opts)
+            require("hlslens").setup(opts)
+
+            local keymap_opts = { noremap = true, silent = true }
+            vim.api.nvim_set_keymap('n', 'n',
+                [[<Cmd>execute('normal! ' . v:count1 . 'n')<CR><Cmd>lua require('hlslens').start()<CR>]],
+                keymap_opts)
+            vim.api.nvim_set_keymap('n', 'N',
+                [[<Cmd>execute('normal! ' . v:count1 . 'N')<CR><Cmd>lua require('hlslens').start()<CR>]],
+                keymap_opts)
+            vim.api.nvim_set_keymap('n', '*', [[*<Cmd>lua require('hlslens').start()<CR>]], keymap_opts)
+            vim.api.nvim_set_keymap('n', '#', [[#<Cmd>lua require('hlslens').start()<CR>]], keymap_opts)
+            vim.api.nvim_set_keymap('n', 'g*', [[g*<Cmd>lua require('hlslens').start()<CR>]], keymap_opts)
+            vim.api.nvim_set_keymap('n', 'g#', [[g#<Cmd>lua require('hlslens').start()<CR>]], keymap_opts)
+            vim.api.nvim_set_keymap('n', '<Leader>l', '<Cmd>noh<CR>', keymap_opts)
+
+            local augroup = vim.api.nvim_create_augroup("ScrollbarSearchHide", { clear = true })
+            vim.api.nvim_create_autocmd("CmdlineLeave", {
+                group = augroup,
+                callback = function()
+                    require('scrollbar.handlers.search').handler.hide()
+                end,
+            })
+        end
+    },
+    {
+        "lewis6991/gitsigns.nvim",
+        config = function(_, opts)
+            require('gitsigns').setup(opts)
+            require("scrollbar.handlers.gitsigns").setup()
+        end
+    },
+    {
+        "lukas-reineke/indent-blankline.nvim",
+        opts =
+        {
+            -- for example, context is off by default, use this to turn it on
+            show_current_context = true,
+            show_current_context_start = true,
+        }
     },
     { "folke/which-key.nvim",      config = true },
     { "echasnovski/mini.pairs",    config = true },
