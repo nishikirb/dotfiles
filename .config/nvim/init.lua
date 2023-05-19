@@ -1,34 +1,34 @@
 local vim_opts = {
     encoding = "utf-8",
     title = false,
-    ruler = true, -- Show the cursor position
+    ruler = true,  -- Show the cursor position
     number = true, -- 行番号の表示
-    list = true, -- Show invisible characters
+    list = true,   -- Show invisible characters
     listchars = {
         tab = "» ",
         trail = "·",
         nbsp = "·",
         eol = "↲",
     },
-    expandtab = true,             -- タブを空白に置き換える
-    tabstop = 2,                  -- タブ幅
-    softtabstop = 2,              -- バックスペースなどで削除する空白の数
-    shiftwidth = 2,               -- インデント幅
-    autoindent = true,            -- 改行時に入力された行のインデントを継続する
-    smartindent = true,           -- 改行時に入力された行の末尾に合わせて次の行のインデントを増減する
-    whichwrap = "b,s,h,l,<,>,[,]", -- カーソルを行頭、行末で止まらないようにする
+    expandtab = true,               -- タブを空白に置き換える
+    tabstop = 2,                    -- タブ幅
+    softtabstop = 2,                -- バックスペースなどで削除する空白の数
+    shiftwidth = 2,                 -- インデント幅
+    autoindent = true,              -- 改行時に入力された行のインデントを継続する
+    smartindent = true,             -- 改行時に入力された行の末尾に合わせて次の行のインデントを増減する
+    whichwrap = "b,s,h,l,<,>,[,]",  -- カーソルを行頭、行末で止まらないようにする
     backspace = "indent,eol,start", -- バックスペースを有効にする
     colorcolumn = "100",
-    synmaxcol = 200,              -- シンタックスハイライトは一行につき200文字までとする
-    backup = false,               -- ファイル保存時にバックアップファイルを作らない
-    swapfile = false,             -- ファイル編集中にスワップファイルを作らない
-    wildmenu = true,              -- コマンドラインモードで<Tab>キーによるファイル名補完を有効にする
-    history = 100,                -- keep command line history
-    hlsearch = true,              -- 検索文字列をハイライトする
-    incsearch = true,             -- do incremental searching
-    ignorecase = true,            -- 大文字と小文字を区別しない
-    smartcase = true,             -- 大文字と小文字が混在している場合は大文字と小文字を区別する
-    laststatus = 2,               -- display status line
+    synmaxcol = 200,                -- シンタックスハイライトは一行につき200文字までとする
+    backup = false,                 -- ファイル保存時にバックアップファイルを作らない
+    swapfile = false,               -- ファイル編集中にスワップファイルを作らない
+    wildmenu = true,                -- コマンドラインモードで<Tab>キーによるファイル名補完を有効にする
+    history = 100,                  -- keep command line history
+    hlsearch = true,                -- 検索文字列をハイライトする
+    incsearch = true,               -- do incremental searching
+    ignorecase = true,              -- 大文字と小文字を区別しない
+    smartcase = true,               -- 大文字と小文字が混在している場合は大文字と小文字を区別する
+    laststatus = 2,                 -- display status line
     clipboard = "unnamed",
     mouse = "a",
     visualbell = true,
@@ -207,6 +207,48 @@ require("lazy").setup({
     {
         "j-hui/fidget.nvim",
         config = true
+    },
+    {
+        "hrsh7th/nvim-cmp",
+        event = "InsertEnter",
+        dependencies = {
+            "hrsh7th/cmp-nvim-lsp",
+            "hrsh7th/cmp-buffer",
+            "hrsh7th/cmp-path",
+            "L3MON4D3/LuaSnip",
+            "saadparwaiz1/cmp_luasnip",
+            "onsails/lspkind.nvim",
+        },
+        opts = function(_, opts)
+            local cmp = require("cmp")
+            local lspkind = require('lspkind')
+            return {
+                formatting = {
+                    format = lspkind.cmp_format({
+                        with_text = true,
+                        maxwidth = 50, -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
+                    })
+                },
+                snippet = {
+                    expand = function(args)
+                        require('luasnip').lsp_expand(args.body)
+                    end,
+                },
+                mapping = cmp.mapping.preset.insert({
+                    ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+                    ['<C-f>'] = cmp.mapping.scroll_docs(4),
+                    ['<C-Space>'] = cmp.mapping.complete(),
+                    ['<C-e>'] = cmp.mapping.abort(),
+                    ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+                }),
+                sources = cmp.config.sources({
+                    { name = 'nvim_lsp' },
+                    { name = 'buffer' },
+                    { name = 'path' },
+                    { name = 'luasnip' },
+                }),
+            }
+        end,
     },
     {
         "nvim-lualine/lualine.nvim",
