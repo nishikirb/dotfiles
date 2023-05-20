@@ -10,6 +10,7 @@ local vim_opts = {
         nbsp = "·",
         eol = "↲",
     },
+    cursorline = true,
     expandtab = true,               -- タブを空白に置き換える
     tabstop = 2,                    -- タブ幅
     softtabstop = 2,                -- バックスペースなどで削除する空白の数
@@ -28,11 +29,16 @@ local vim_opts = {
     incsearch = true,               -- do incremental searching
     ignorecase = true,              -- 大文字と小文字を区別しない
     smartcase = true,               -- 大文字と小文字が混在している場合は大文字と小文字を区別する
-    laststatus = 2,                 -- display status line
+    laststatus = 0,                 -- display status line
+    scrolloff = 4,
+    sidescrolloff = 8,
+    signcolumn = "yes",
+    showmode = false,
     clipboard = "unnamed",
     mouse = "a",
     visualbell = true,
     errorbells = false,
+    grepprg = "rg --vimgrep"
 }
 
 for k, v in pairs(vim_opts) do
@@ -56,6 +62,16 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+local lazy_opts = {
+    ui = {
+        icons = {
+            ft = "",
+            lazy = "󰂠 ",
+            loaded = "",
+            not_loaded = "",
+        },
+    },
+}
 require("lazy").setup({
     -- TreeSitter
     {
@@ -84,7 +100,15 @@ require("lazy").setup({
         "williamboman/mason.nvim",
         -- cmd = "Mason",
         build = ":MasonUpdate", -- :MasonUpdate updates registry contents
-        config = true,
+        opts = {
+            ui = {
+                icons = {
+                    package_installed = "󰄳 ",
+                    package_pending = " ",
+                    package_uninstalled = " ",
+                },
+            },
+        },
     },
     {
         "williamboman/mason-lspconfig.nvim",
@@ -117,6 +141,11 @@ require("lazy").setup({
             "williamboman/mason-lspconfig.nvim"
         },
         config = function(_, opts)
+            local signs = { Error = " ", Warn = " ", Hint = " ", Information = " " }
+            for type, icon in pairs(signs) do
+                local hl = "DiagnosticSign" .. type
+                vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
+            end
             -- Global mappings.
             -- See `:help vim.diagnostic.*` for documentation on any of the below functions
             vim.keymap.set('n', '<space>e', vim.diagnostic.open_float)
@@ -206,7 +235,15 @@ require("lazy").setup({
     },
     {
         "j-hui/fidget.nvim",
-        config = true
+        opts = {
+            text = {
+                spinner = "dots", -- animation shown when tasks are ongoing
+                done = " ",    -- character shown when all tasks are complete
+            },
+            window = {
+                blend = 0, -- &winblend for the window
+            },
+        }
     },
     {
         "hrsh7th/nvim-cmp",
@@ -317,11 +354,14 @@ require("lazy").setup({
             local keymap_opts = { noremap = true, silent = true }
             vim.api.nvim_set_keymap("n", "<leader>tt", "<cmd>Neotree reveal<cr>", keymap_opts)
             vim.api.nvim_set_keymap("n", "<leader>tw", "<cmd>Neotree close<cr>", keymap_opts)
-            vim.cmd([[ let g:neo_tree_remove_legacy_commands = 1 ]])
+            vim.g.neo_tree_remove_legacy_commands = 1
         end,
     },
     {
         "folke/trouble.nvim",
+        opts = {
+            use_diagnostic_signs = false
+        },
         config = function(_, opts)
             require("trouble").setup(opts)
             local keymap_opts = { noremap = true, silent = true }
@@ -341,10 +381,16 @@ require("lazy").setup({
             { "nvim-telescope/telescope-fzf-native.nvim", build = "make" }
         },
         opts = {
+            defaults = {
+                prompt_prefix = "   ",
+                selection_caret = " ",
+                file_ignore_patterns = { "node_modules" },
+                winblend = 0,
+            },
             pickers = {
-                -- find_files = {
-                --   find_command = {'rg', '--files', '--hidden', '--glob', '!.git'}
-                -- },
+                find_files = {
+                    find_command = { 'rg', '--files', '--hidden', '--glob', '!.git' }
+                },
                 buffers = {
                     sort_lastused = true
                 }
@@ -367,19 +413,29 @@ require("lazy").setup({
             "kevinhwang91/nvim-hlslens",
             "lewis6991/gitsigns.nvim"
         },
+        opts = {
+            hide_if_all_visible = true,
+            handle = {
+                text = " ",
+                blend = 60,
+            },
+            excluded_filetypes = {
+                "prompt",
+                "TelescopePrompt",
+                "neo-tree", "neo-tree-popup"
+            }
+        },
         config = function(_, opts)
-            require("scrollbar").setup()
-        end
+            require("scrollbar").setup(opts)
+        end,
     },
     {
         "kevinhwang91/nvim-hlslens",
-        opts = {
-            build_position_cb = function(plist, _, _, _)
-                require("scrollbar.handlers.search").handler.show(plist.start_pos)
-            end,
-        },
         config = function(_, opts)
-            require("hlslens").setup(opts)
+            -- require('hlslens').setup() is not required
+            require("scrollbar.handlers.search").setup({
+                -- hlslens config overrides
+            })
 
             local keymap_opts = { noremap = true, silent = true }
             vim.api.nvim_set_keymap('n', 'n',
@@ -393,18 +449,20 @@ require("lazy").setup({
             vim.api.nvim_set_keymap('n', 'g*', [[g*<Cmd>lua require('hlslens').start()<CR>]], keymap_opts)
             vim.api.nvim_set_keymap('n', 'g#', [[g#<Cmd>lua require('hlslens').start()<CR>]], keymap_opts)
             vim.api.nvim_set_keymap('n', '<Leader>l', '<Cmd>noh<CR>', keymap_opts)
-
-            local augroup = vim.api.nvim_create_augroup("ScrollbarSearchHide", { clear = true })
-            vim.api.nvim_create_autocmd("CmdlineLeave", {
-                group = augroup,
-                callback = function()
-                    require('scrollbar.handlers.search').handler.hide()
-                end,
-            })
         end
     },
     {
         "lewis6991/gitsigns.nvim",
+        opts = {
+            signs = {
+                add = { text = "▎" },
+                change = { text = "▎" },
+                delete = { text = "" },
+                topdelete = { text = "" },
+                changedelete = { text = "▎" },
+                untracked = { text = "▎" },
+            },
+        },
         config = function(_, opts)
             require('gitsigns').setup(opts)
             require("scrollbar.handlers.gitsigns").setup()
@@ -412,11 +470,13 @@ require("lazy").setup({
     },
     {
         "lukas-reineke/indent-blankline.nvim",
+        event = { "BufReadPost", "BufNewFile" },
         opts =
         {
-            -- for example, context is off by default, use this to turn it on
+            show_trailing_blankline_indent = false,
+            show_first_indent_level = true,
             show_current_context = true,
-            show_current_context_start = true,
+            show_current_context_start = false,
         }
     },
     { "folke/which-key.nvim",      config = true },
@@ -438,5 +498,10 @@ require("lazy").setup({
             require("transparent").setup(opts)
             -- vim.g.transparent_groups = vim.list_extend(vim.g.transparent_groups or {}, { "ExtraGroup" })
         end,
-    }
-})
+    },
+    {
+        "dstein64/vim-startuptime",
+        cmd = "StartupTime",
+    },
+
+}, lazy_opts)
