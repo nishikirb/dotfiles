@@ -32,6 +32,7 @@ local vim_opts = {
     laststatus = 0,                 -- display status line
     scrolloff = 4,
     sidescrolloff = 8,
+    pumheight = 20,
     signcolumn = "yes",
     showmode = false,
     clipboard = "unnamed",
@@ -64,6 +65,7 @@ vim.opt.rtp:prepend(lazypath)
 
 local lazy_opts = {
     ui = {
+        border = "rounded",
         icons = {
             ft = "",
             lazy = "󰂠 ",
@@ -102,6 +104,7 @@ require("lazy").setup({
         build = ":MasonUpdate", -- :MasonUpdate updates registry contents
         opts = {
             ui = {
+                border = "rounded",
                 icons = {
                     package_installed = "󰄳 ",
                     package_pending = " ",
@@ -146,6 +149,14 @@ require("lazy").setup({
                 local hl = "DiagnosticSign" .. type
                 vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
             end
+
+            vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
+                vim.lsp.handlers.hover,
+                { border = "rounded", silent = true, blend = 0 }
+            )
+            vim.lsp.handlers["textDocument/signatureHelp"] =
+                vim.lsp.with(vim.lsp.handlers.signature_help, { border = "rounded", silent = true })
+
             -- Global mappings.
             -- See `:help vim.diagnostic.*` for documentation on any of the below functions
             vim.keymap.set('n', '<space>e', vim.diagnostic.open_float)
@@ -252,6 +263,7 @@ require("lazy").setup({
             "hrsh7th/cmp-nvim-lsp",
             "hrsh7th/cmp-buffer",
             "hrsh7th/cmp-path",
+            "hrsh7th/cmp-cmdline",
             "L3MON4D3/LuaSnip",
             "saadparwaiz1/cmp_luasnip",
             "onsails/lspkind.nvim",
@@ -260,11 +272,24 @@ require("lazy").setup({
             local cmp = require("cmp")
             local lspkind = require('lspkind')
             return {
+                window = {
+                    completion = cmp.config.window.bordered(),
+                    documentation = cmp.config.window.bordered(),
+                },
                 formatting = {
-                    format = lspkind.cmp_format({
-                        with_text = true,
-                        maxwidth = 50, -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
-                    })
+                    fields = { "kind", "abbr", "menu" },
+                    format = function(entry, vim_item)
+                        local kind = lspkind.cmp_format({
+                            mode = "symbol_text", maxwidth = 50
+                        })(entry, vim_item)
+                        local strings = vim.split(kind.kind, "%s", { trimempty = true })
+                        kind.kind = " " .. (strings[1] or "") .. " "
+                        kind.menu = "    (" .. (strings[2] or "") .. ")"
+                        return kind
+                    end
+                },
+                completion = {
+                    keyword_length = 2,
                 },
                 snippet = {
                     expand = function(args)
@@ -286,6 +311,26 @@ require("lazy").setup({
                 }),
             }
         end,
+        config = function(_, opts)
+            local cmp = require 'cmp'
+            -- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
+            cmp.setup.cmdline({ '/', '?' }, {
+                mapping = cmp.mapping.preset.cmdline(),
+                sources = {
+                    { name = 'buffer' }
+                }
+            })
+            -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
+            cmp.setup.cmdline(':', {
+                mapping = cmp.mapping.preset.cmdline(),
+                sources = cmp.config.sources({
+                    { name = 'path' }
+                }, {
+                    { name = 'cmdline' }
+                })
+            })
+            cmp.setup(opts)
+        end,
     },
     {
         "nvim-lualine/lualine.nvim",
@@ -300,7 +345,12 @@ require("lazy").setup({
             "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
             "MunifTanjim/nui.nvim",
         },
+        init = function()
+            vim.g.neo_tree_remove_legacy_commands = true
+        end,
         opts = {
+            -- https://github.com/nvim-neo-tree/neo-tree.nvim/issues/753#issuecomment-1440085270
+            use_popups_for_input = false,
             filesystem = {
                 filtered_items = {
                     hide_dotfiles = false,
@@ -354,7 +404,6 @@ require("lazy").setup({
             local keymap_opts = { noremap = true, silent = true }
             vim.api.nvim_set_keymap("n", "<leader>tt", "<cmd>Neotree reveal<cr>", keymap_opts)
             vim.api.nvim_set_keymap("n", "<leader>tw", "<cmd>Neotree close<cr>", keymap_opts)
-            vim.g.neo_tree_remove_legacy_commands = 1
         end,
     },
     {
@@ -427,6 +476,7 @@ require("lazy").setup({
         },
         config = function(_, opts)
             require("scrollbar").setup(opts)
+            require("scrollbar.handlers.gitsigns").setup()
         end,
     },
     {
@@ -465,7 +515,6 @@ require("lazy").setup({
         },
         config = function(_, opts)
             require('gitsigns').setup(opts)
-            require("scrollbar.handlers.gitsigns").setup()
         end
     },
     {
@@ -479,16 +528,31 @@ require("lazy").setup({
             show_current_context_start = false,
         }
     },
-    { "folke/which-key.nvim",      config = true },
+    {
+        "folke/which-key.nvim",
+        opts = {
+            window = {
+                border = "single",
+            }
+        }
+    },
     { "echasnovski/mini.pairs",    config = true },
     { "echasnovski/mini.surround", config = true },
     { "echasnovski/mini.comment",  config = true },
     { "folke/todo-comments.nvim",  config = true },
     {
         "EdenEast/nightfox.nvim",
-        config = function(_, opts)
+        opts = {
+            groups = {
+                all = {
+                    -- { fg = "fg1", bg = "bg1" } by default
+                    FloatBorder = { fg = "fg0", bg = "bg0" }
+                }
+            }
+        },
+        init = function()
             vim.cmd.colorscheme("nordfox")
-        end
+        end,
     },
     {
         "xiyaowong/transparent.nvim",
@@ -498,6 +562,10 @@ require("lazy").setup({
             require("transparent").setup(opts)
             -- vim.g.transparent_groups = vim.list_extend(vim.g.transparent_groups or {}, { "ExtraGroup" })
         end,
+    },
+    {
+        'stevearc/dressing.nvim',
+        opts = {},
     },
     {
         "dstein64/vim-startuptime",
