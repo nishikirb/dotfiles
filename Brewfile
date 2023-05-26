@@ -1,6 +1,7 @@
 tap "homebrew/cask-fonts"
 tap "mongodb/brew"
 tap "wez/wezterm"
+brew "wget"
 brew "asdf"
 brew "awscli"
 brew "httpie"
