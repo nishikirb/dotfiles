@@ -1,0 +1,19 @@
+destination = '/Users/gleamsoda'
+source = '/Users/gleamsoda/.local/share/donut'
+excludes = [
+  ".gitignore",
+  "LICENSE",
+  "README.md",
+  "Brewfile",
+  "my.rayconfig",
+  "scripts",
+]
+[editor]
+command = "nvim"
+args = []
+[pager]
+command = "delta"
+args = []
+[merge]
+command = "nvim"
+args = ["-d"]

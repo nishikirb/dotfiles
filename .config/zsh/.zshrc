@@ -4,7 +4,7 @@
 export LANG=ja_JP.UTF-8
 export GOPATH=$HOME/go
 export GOBIN=$GOPATH/bin
-export PATH=$PATH:$GOBIN
+export PATH=$PATH:$GOBIN:$HOME/.cargo/bin
 export FZF_COMPLETION_TRIGGER='++'
 export FZF_COMPLETION_OPTS='--border --info=inline'
 export STARSHIP_CONFIG="${XDG_CONFIG_HOME}/starship/starship.toml"
@@ -30,6 +30,11 @@ setopt share_history
 # auto ls
 function chpwd() { ls }
 
+# move to dotfiles dir
+function cddot() {
+  cd $(donut where source)
+}
+
 # -------
 # Aliases
 # -------
@@ -50,6 +55,9 @@ bindkey -M vicmd 'j' history-substring-search-down
 [ -f $HOMEBREW_PREFIX/opt/asdf/libexec/asdf.sh ] && . $HOMEBREW_PREFIX/opt/asdf/libexec/asdf.sh
 [ -f "${XDG_CONFIG_HOME:-$HOME/.config}"/fzf/fzf.zsh ] && source "${XDG_CONFIG_HOME:-$HOME/.config}"/fzf/fzf.zsh
 
+if command -v brew > /dev/null 2>&1; then
+    FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
+fi
 if command -v starship > /dev/null 2>&1; then
     eval "$(starship init zsh)"
 fi
