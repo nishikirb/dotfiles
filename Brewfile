@@ -1,6 +1,5 @@
 tap "homebrew/cask-fonts"
 tap "mongodb/brew"
-tap "wez/wezterm"
 tap "goreleaser/tap"
 tap "1password/tap"
 brew "wget"

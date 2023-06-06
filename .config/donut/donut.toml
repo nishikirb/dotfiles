@@ -1,13 +1,14 @@
 destination = '/Users/gleamsoda'
 source = '/Users/gleamsoda/.local/share/donut'
-excludes = [
-  ".gitignore",
-  "LICENSE",
-  "README.md",
-  "Brewfile",
-  "my.rayconfig",
-  "scripts",
-]
 editor = ["nvim"]
 pager = ["delta"]
 merge = ["nvim", "-d", "{{.Destination}}", "{{.Source}}"]
+excludes = [
+  ".gitignore",
+  "scripts",
+  "README.md",
+  "LICENSE",
+  "Brewfile",
+  "app.md"
+  "my.rayconfig",
+]
