@@ -9,3 +9,4 @@
 - Discord
 - Spotify
 - 1Password
+- Obsidian
