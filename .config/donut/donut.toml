@@ -9,6 +9,6 @@ excludes = [
   "README.md",
   "LICENSE",
   "Brewfile",
-  "app.md"
+  "app.md",
   "my.rayconfig",
 ]
