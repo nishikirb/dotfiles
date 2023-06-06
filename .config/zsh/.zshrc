@@ -1,10 +1,13 @@
+# Fig pre block. Keep at the top of this file.
+[[ -f "$HOME/.fig/shell/zshrc.pre.zsh" ]] && builtin source "$HOME/.fig/shell/zshrc.pre.zsh"
+
 # ---------------------
 # Environment Variables
 # ---------------------
 export LANG=ja_JP.UTF-8
 export GOPATH=$HOME/go
 export GOBIN=$GOPATH/bin
-export PATH=$PATH:$GOBIN:$HOME/.cargo/bin
+export PATH=$PATH:$GOBIN:$HOME/.cargo/bin:$HOME/.local/bin
 export FZF_COMPLETION_TRIGGER='++'
 export FZF_COMPLETION_OPTS='--border --info=inline'
 export STARSHIP_CONFIG="${XDG_CONFIG_HOME}/starship/starship.toml"
@@ -66,3 +69,6 @@ if command -v sheldon > /dev/null 2>&1; then
 fi
 
 autoload -Uz compinit; compinit
+
+# Fig post block. Keep at the bottom of this file.
+[[ -f "$HOME/.fig/shell/zshrc.post.zsh" ]] && builtin source "$HOME/.fig/shell/zshrc.post.zsh"
