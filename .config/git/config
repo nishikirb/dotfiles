@@ -16,3 +16,5 @@
 	df = diff
 	dfc = diff --cached
 	l = log
+[init]
+	defaultBranch = main
