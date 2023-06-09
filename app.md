@@ -10,3 +10,5 @@
 - Spotify
 - 1Password
 - Obsidian
+- Figma
+- AppCleaner

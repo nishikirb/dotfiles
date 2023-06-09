@@ -34,7 +34,7 @@ setopt share_history
 function chpwd() { ls }
 
 # move to dotfiles dir
-function cddot() {
+function cdd() {
   cd $(donut where source)
 }
 
