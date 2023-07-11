@@ -1,5 +1,5 @@
-destination = '/Users/gleamsoda'
-source = '/Users/gleamsoda/.local/share/donut'
+destination = '$HOME'
+source = '$HOME/.local/share/donut'
 editor = ["nvim"]
 pager = ["delta"]
 merge = ["nvim", "-d", "{{.Destination}}", "{{.Source}}"]

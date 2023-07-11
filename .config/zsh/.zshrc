@@ -7,7 +7,7 @@
 export LANG=ja_JP.UTF-8
 export GOPATH=$HOME/go
 export GOBIN=$GOPATH/bin
-export PATH=$PATH:$GOBIN:$HOME/.cargo/bin:$HOME/.local/bin
+export PATH=$PATH:$GOBIN:$HOME/.cargo/bin:$HOME/.local/bin:/opt/homebrew/opt/postgresql@15/bin
 export FZF_COMPLETION_TRIGGER='++'
 export FZF_COMPLETION_OPTS='--border --info=inline'
 export STARSHIP_CONFIG="${XDG_CONFIG_HOME}/starship/starship.toml"
@@ -66,6 +66,9 @@ if command -v starship > /dev/null 2>&1; then
 fi
 if command -v sheldon > /dev/null 2>&1; then
     eval "$(sheldon source)"
+fi
+if command -v direnv > /dev/null 2>&1; then
+    eval "$(direnv hook zsh)"
 fi
 
 autoload -Uz compinit; compinit
