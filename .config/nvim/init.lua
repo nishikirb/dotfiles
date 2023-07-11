@@ -337,6 +337,20 @@ require("lazy").setup({
         dependencies = { 'nvim-tree/nvim-web-devicons', opt = true },
         config = true
     },
+    -- {
+    --     'akinsho/bufferline.nvim',
+    --     version = "*",
+    --     dependencies = 'nvim-tree/nvim-web-devicons',
+    --     config = function(_, opts)
+    --         vim.opt.termguicolors = true
+    --         require("bufferline").setup(opts)
+    --     end,
+    -- },
+    {
+        'akinsho/toggleterm.nvim',
+        version = "*",
+        config = true
+    },
     {
         "nvim-neo-tree/neo-tree.nvim",
         branch = "v2.x",
@@ -456,51 +470,51 @@ require("lazy").setup({
             vim.api.nvim_set_keymap('n', '<leader>fh', '<cmd>Telescope help_tags<cr>', keymap_opts)
         end
     },
-    {
-        "petertriho/nvim-scrollbar",
-        dependencies = {
-            "kevinhwang91/nvim-hlslens",
-            "lewis6991/gitsigns.nvim"
-        },
-        opts = {
-            hide_if_all_visible = true,
-            handle = {
-                text = " ",
-                blend = 60,
-            },
-            excluded_filetypes = {
-                "prompt",
-                "TelescopePrompt",
-                "neo-tree", "neo-tree-popup"
-            }
-        },
-        config = function(_, opts)
-            require("scrollbar").setup(opts)
-            require("scrollbar.handlers.gitsigns").setup()
-        end,
-    },
-    {
-        "kevinhwang91/nvim-hlslens",
-        config = function(_, opts)
-            -- require('hlslens').setup() is not required
-            require("scrollbar.handlers.search").setup({
-                -- hlslens config overrides
-            })
+    -- {
+    --     "petertriho/nvim-scrollbar",
+    --     dependencies = {
+    --         "kevinhwang91/nvim-hlslens",
+    --         "lewis6991/gitsigns.nvim"
+    --     },
+    --     opts = {
+    --         hide_if_all_visible = true,
+    --         handle = {
+    --             text = " ",
+    --             blend = 60,
+    --         },
+    --         excluded_filetypes = {
+    --             "prompt",
+    --             "TelescopePrompt",
+    --             "neo-tree", "neo-tree-popup"
+    --         }
+    --     },
+    --     config = function(_, opts)
+    --         require("scrollbar").setup(opts)
+    --         require("scrollbar.handlers.gitsigns").setup()
+    --     end,
+    -- },
+    -- {
+    --     "kevinhwang91/nvim-hlslens",
+    --     config = function(_, opts)
+    --         -- require('hlslens').setup() is not required
+    --         require("scrollbar.handlers.search").setup({
+    --             -- hlslens config overrides
+    --         })
 
-            local keymap_opts = { noremap = true, silent = true }
-            vim.api.nvim_set_keymap('n', 'n',
-                [[<Cmd>execute('normal! ' . v:count1 . 'n')<CR><Cmd>lua require('hlslens').start()<CR>]],
-                keymap_opts)
-            vim.api.nvim_set_keymap('n', 'N',
-                [[<Cmd>execute('normal! ' . v:count1 . 'N')<CR><Cmd>lua require('hlslens').start()<CR>]],
-                keymap_opts)
-            vim.api.nvim_set_keymap('n', '*', [[*<Cmd>lua require('hlslens').start()<CR>]], keymap_opts)
-            vim.api.nvim_set_keymap('n', '#', [[#<Cmd>lua require('hlslens').start()<CR>]], keymap_opts)
-            vim.api.nvim_set_keymap('n', 'g*', [[g*<Cmd>lua require('hlslens').start()<CR>]], keymap_opts)
-            vim.api.nvim_set_keymap('n', 'g#', [[g#<Cmd>lua require('hlslens').start()<CR>]], keymap_opts)
-            vim.api.nvim_set_keymap('n', '<Leader>l', '<Cmd>noh<CR>', keymap_opts)
-        end
-    },
+    --         local keymap_opts = { noremap = true, silent = true }
+    --         vim.api.nvim_set_keymap('n', 'n',
+    --             [[<Cmd>execute('normal! ' . v:count1 . 'n')<CR><Cmd>lua require('hlslens').start()<CR>]],
+    --             keymap_opts)
+    --         vim.api.nvim_set_keymap('n', 'N',
+    --             [[<Cmd>execute('normal! ' . v:count1 . 'N')<CR><Cmd>lua require('hlslens').start()<CR>]],
+    --             keymap_opts)
+    --         vim.api.nvim_set_keymap('n', '*', [[*<Cmd>lua require('hlslens').start()<CR>]], keymap_opts)
+    --         vim.api.nvim_set_keymap('n', '#', [[#<Cmd>lua require('hlslens').start()<CR>]], keymap_opts)
+    --         vim.api.nvim_set_keymap('n', 'g*', [[g*<Cmd>lua require('hlslens').start()<CR>]], keymap_opts)
+    --         vim.api.nvim_set_keymap('n', 'g#', [[g#<Cmd>lua require('hlslens').start()<CR>]], keymap_opts)
+    --         vim.api.nvim_set_keymap('n', '<Leader>l', '<Cmd>noh<CR>', keymap_opts)
+    --     end
+    -- },
     {
         "lewis6991/gitsigns.nvim",
         opts = {
