@@ -254,7 +254,8 @@ require("lazy").setup({
             window = {
                 blend = 0, -- &winblend for the window
             },
-        }
+        },
+        tag = "legacy"
     },
     {
         "hrsh7th/nvim-cmp",

@@ -1,5 +1,6 @@
 destination = '$HOME'
 source = '$HOME/.local/share/donut'
+diff = ['diff', '-upN', '{{.Destination}}', '{{.Source}}']
 editor = ["nvim"]
 pager = ["delta"]
 merge = ["nvim", "-d", "{{.Destination}}", "{{.Source}}"]
