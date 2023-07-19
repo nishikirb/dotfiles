@@ -9,6 +9,7 @@ export GOPATH=$HOME/go
 export GOBIN=$GOPATH/bin
 export PATH=$GOBIN:$HOME/.cargo/bin:$HOME/.local/bin:$PATH
 export PATH=$HOMEBREW_PREFIX/opt/postgresql@15/bin:$PATH
+export PATH=$HOMEBREW_PREFIX/opt/openjdk@17/bin:$PATH
 export FZF_COMPLETION_TRIGGER='++'
 export FZF_COMPLETION_OPTS='--border --info=inline'
 export STARSHIP_CONFIG="${XDG_CONFIG_HOME}/starship/starship.toml"
@@ -27,6 +28,10 @@ if command -v sheldon > /dev/null 2>&1; then
 fi
 if command -v direnv > /dev/null 2>&1; then
     eval "$(direnv hook zsh)"
+fi
+if [ -f $HOMEBREW_PREFIX/share/google-cloud-sdk/path.zsh.inc ]; then
+    source "$HOMEBREW_PREFIX/share/google-cloud-sdk/path.zsh.inc"
+    source "$HOMEBREW_PREFIX/share/google-cloud-sdk/completion.zsh.inc"
 fi
 
 # ------------------
