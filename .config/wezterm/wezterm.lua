@@ -36,4 +36,5 @@ config.keys = {
     { key = 'q',  mods = 'CTRL',      action = wezterm.action.PaneSelect { alphabet = '0123456789' } },
     { key = '1',  mods = 'CTRL',      action = wezterm.action.ShowTabNavigator },
 }
+config.audible_bell = "Disabled"
 return config
