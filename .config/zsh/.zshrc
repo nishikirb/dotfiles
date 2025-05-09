@@ -1,6 +1,3 @@
-# Fig pre block. Keep at the top of this file.
-[[ -f "$HOME/.fig/shell/zshrc.pre.zsh" ]] && builtin source "$HOME/.fig/shell/zshrc.pre.zsh"
-
 # ---------------------
 # Environment Variables
 # ---------------------
@@ -8,8 +5,8 @@ export LANG=ja_JP.UTF-8
 export GOPATH=$HOME/go
 export GOBIN=$GOPATH/bin
 export PATH=$GOBIN:$HOME/.cargo/bin:$HOME/.local/bin:$PATH
-export PATH=$HOMEBREW_PREFIX/opt/postgresql@15/bin:$PATH
-export PATH=$HOMEBREW_PREFIX/opt/openjdk@17/bin:$PATH
+export PATH=$HOMEBREW_PREFIX/opt/postgresql@17/bin:$PATH
+export PATH=$HOMEBREW_PREFIX/opt/openjdk@21/bin:$PATH
 export FZF_COMPLETION_TRIGGER='++'
 export FZF_COMPLETION_OPTS='--border --info=inline'
 export STARSHIP_CONFIG="${XDG_CONFIG_HOME}/starship/starship.toml"
@@ -78,6 +75,3 @@ bindkey -M vicmd 'k' history-substring-search-up
 bindkey -M vicmd 'j' history-substring-search-down
 
 autoload -Uz compinit; compinit
-
-# Fig post block. Keep at the bottom of this file.
-[[ -f "$HOME/.fig/shell/zshrc.post.zsh" ]] && builtin source "$HOME/.fig/shell/zshrc.post.zsh"

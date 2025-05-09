@@ -7,20 +7,20 @@
 	pager = delta
 
 [alias]
-  a = add
-  b = branch
+	a = add
+	b = branch
 	c = commit
-  co = checkout
-  cp = cherry-pick
+	co = checkout
+	cp = cherry-pick
 	d = diff
 	dc = diff --cached
 	ps = push
 	pl = pull
-  rs = reset
-  rb = rebase
-  rv = revert
+	rs = reset
+	rb = rebase
+	rv = revert
 	s = status
-  l = log
+	l = log
 
 [init]
 	defaultBranch = main
